@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calculate the ideal age range for your relationship partner">
+    <title>Fossil Calculator - Find Your Ideal Partner Age Range</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card {
+            border: none;
+            border-radius: 15px;
+        }
+        .form-control, .form-select, .btn {
+            border-radius: 8px;
+        }
+        .btn-primary {
+            background-color: #4a6bff;
+            border-color: #4a6bff;
+        }
+        .btn-primary:hover {
+            background-color: #3a56d4;
+            border-color: #3a56d4;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="card shadow-lg">
+                    <div class="card-body p-4 p-md-5">
+                        <div class="text-center mb-4">
+                            <h1 class="card-title display-5 fw-bold mb-3">Fossil Calculator</h1>
+                            <p class="card-text text-muted fs-5">
+                                Enter your details to find the ideal age range for your relationship partner
+                            </p>
+                        </div>
+
+                        <form id="datingForm" novalidate>
+                            <div class="mb-4">
+                                <label for="age" class="form-label fw-semibold">Your Age</label>
+                                <input type="number" 
+                                       class="form-control form-control-lg" 
+                                       id="age" 
+                                       placeholder="e.g. 25" 
+                                       min="18" 
+                                       max="120" 
+                                       required>
+                                <div class="invalid-feedback">Please enter a valid age (18-120)</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="gender" class="form-label fw-semibold">Your Gender</label>
+                                <select class="form-select form-select-lg" id="gender" required>
+                                    <option value="" selected disabled>Select Gender</option>
+                                    <option value="m">Male</option>
+                                    <option value="f">Female</option>
+                                </select>
+                                <div class="invalid-feedback">Please select your gender</div>
+                            </div>
+
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg py-3 fw-semibold">
+                                    Calculate Ideal Age Range
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Result Modal -->
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h2 class="modal-title fs-5" id="resultModalLabel">Your Ideal Partner Age Range</h2>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-4">
+                    <p class="fs-5 mb-0" id="modalResult"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('datingForm');
+            const resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+            
+            // Form validation and submission
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                
+                if (form.checkValidity()) {
+                    handleSubmit();
+                }
+                
+                form.classList.add('was-validated');
+            });
+        });
+
+        const calculateIdealAge=(age,gender)=>{
+            let halved=age/2;
+           
+            const ageRange=[];
+            let index=0;
+            switch(gender){
+                case 'm':{
+                    const min=Math.floor(halved+7)
+                    const max=Math.floor(halved+10)
+                    return{min,max}
+                }
+                case 'f':{
+                    const min=Math.floor(2*(age-10))
+                    const max=Math.floor(2*(age-7))
+                    return{min,max}
+                        
+                }
+            }
+                    }
+
+        function handleSubmit() {
+            const age = document.getElementById('age').value;
+            const gender = document.getElementById('gender').value;
+            
+            if (!age || !gender) return;
+            
+            const { min, max } = calculateIdealAge(age, gender);
+            const resultText = `As a ${gender === 'm' ? 'man' : 'woman'} aged ${age}, your ideal partner age range is ${min} to ${max} years old.`;
+            
+            document.getElementById('modalResult').textContent = resultText;
+            
+            const modal = bootstrap.Modal.getInstance(document.getElementById('resultModal'));
+            modal.show();
+        }
+    </script>
+</body>
+</html>
